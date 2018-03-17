@@ -1,0 +1,17 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+#the-canvas {
+  border:1px solid black;
+  box-shadow: 5px 10px 20px grey; 
+}
+
+.pdfobject-container { height: 1200px;}
+.pdfobject-container { width: 1200px;}
+.pdfobject { border: 1px solid #666; }

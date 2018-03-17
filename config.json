@@ -1,0 +1,12 @@
+{
+    "admin": {
+        "username": "admin",
+        "password": "admin"
+    },
+    "db":{
+        "mode": false,
+        "mongo":{
+            "url": "mongodb://kgao:msrnyc@ds012678.mlab.com:12678/frus"
+        }
+    }
+}

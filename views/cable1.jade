@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  
+  h1= title
+  p Welcome to the #{title} reader!
+  p Server Status: #{e.status}
+  //- p Server Content: #{e.content}
+  canvas#the-canvas
+  script.
+    if (#{e.status} == 200) {
+      console.log(!{JSON.stringify(e.status)});
+      var pdfBase64 = !{JSON.stringify(e.content)};
+    } 
+  script(src="/js/cable.js")
+

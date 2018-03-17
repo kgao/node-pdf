@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  
+  h1= title
+  p Welcome to the #{title} reader!
+  p PDF link: #{url}
+  script(src="/js/pdfobject.js")
+  #example
+  script.
+    PDFObject.embed(!{JSON.stringify(url)}, '#example');
+  
+
