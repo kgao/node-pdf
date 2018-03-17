@@ -19,6 +19,7 @@ Powered by pdf.js and pdfobject.js
 
 # Test
 
-> /api/v1/pdf?style=<cable1,cable2>&url=<url>
-i.e.
-http://localhost:3000/api/v1/pdf?style=cable1&url=https://aad.archives.gov/aad/createpdf?rid=85181%26dt=2082%26dl=1345
+> /api/v1/pdf?style=< cable1, cable2 > & url=< url >
+
+> i.e. 
+  http://localhost:3000/api/v1/pdf?style=cable1&url=https://aad.archives.gov/aad/createpdf?rid=85181%26dt=2082%26dl=1345
