@@ -7,8 +7,11 @@ var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema(
     {   
-        name: String, 
-        type: String 
+        email: { type: String, required: true },
+        password: { type: String, required: true },
+        name: { type: String, required: false }, 
+        gender: { type: String, required: false },
+        address: { type: String, required: false }
     }
 );
 

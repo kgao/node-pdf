@@ -6,6 +6,16 @@ block content
   p Welcome to the #{title} reader!
   p Server Status: #{e.status}
   //- p Server Content: #{e.content}
+  div
+    button#prev Previous
+    &nbsp; 
+    button#next Next
+    &nbsp; &nbsp;
+    span Page: 
+      span#page_num
+      / 
+      span#page_count
+
   canvas#the-canvas
   script.
     if (#{e.status} == 200) {

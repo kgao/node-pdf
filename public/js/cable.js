@@ -1,6 +1,7 @@
-// atob() is used to convert base64 encoded PDF to binary-like data.
-// (See also https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/
-// Base64_encoding_and_decoding.)
+// If absolute URL from the remote server is provided, configure the CORS
+// header on that server.
+
+//var url = '//cdn.mozilla.net/pdfjs/tracemonkey.pdf';
 var pdfData = atob(pdfBase64);
 
 // Loaded via <script> tag, create shortcut to access PDF.js exports.
@@ -9,38 +10,91 @@ var pdfjsLib = window['pdfjs-dist/build/pdf'];
 // The workerSrc property shall be specified.
 pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
 
-// Using DocumentInitParameters object to load binary data.
-var loadingTask = pdfjsLib.getDocument({data: pdfData});
+var pdfDoc = null,
+    pageNum = 1,
+    pageRendering = false,
+    pageNumPending = null,
+    scale = 1.8,
+    canvas = document.getElementById('the-canvas'),
+    ctx = canvas.getContext('2d');
 
-
-loadingTask.promise.then(function(pdf) {
-  console.log('PDF loaded');
-  // Fetch the first page
-  var pageNumber = 1 //TODO multiple pages.
- ;
-  pdf.getPage(pageNumber).then(function(page) {
-    console.log('Page loaded');
-    
-    var scale = 1.5;
+/**
+ * Get page info from document, resize canvas accordingly, and render page.
+ * @param num Page number.
+ */
+function renderPage(num) {
+  pageRendering = true;
+  // Using promise to fetch the page
+  pdfDoc.getPage(num).then(function(page) {
     var viewport = page.getViewport(scale);
-
-    // Prepare canvas using PDF page dimensions
-    var canvas = document.getElementById('the-canvas');
-    var context = canvas.getContext('2d');
     canvas.height = viewport.height;
     canvas.width = viewport.width;
 
     // Render PDF page into canvas context
     var renderContext = {
-      canvasContext: context,
+      canvasContext: ctx,
       viewport: viewport
     };
     var renderTask = page.render(renderContext);
-    renderTask.then(function () {
-      console.log('Page rendered');
+
+    // Wait for rendering to finish
+    renderTask.promise.then(function() {
+      pageRendering = false;
+      if (pageNumPending !== null) {
+        // New page rendering is pending
+        renderPage(pageNumPending);
+        pageNumPending = null;
+      }
     });
   });
-}, function (reason) {
-  // PDF loading error
-  console.error(reason);
+
+  // Update page counters
+  document.getElementById('page_num').textContent = num;
+}
+
+/**
+ * If another page rendering in progress, waits until the rendering is
+ * finised. Otherwise, executes rendering immediately.
+ */
+function queueRenderPage(num) {
+  if (pageRendering) {
+    pageNumPending = num;
+  } else {
+    renderPage(num);
+  }
+}
+
+/**
+ * Displays previous page.
+ */
+function onPrevPage() {
+  if (pageNum <= 1) {
+    return;
+  }
+  pageNum--;
+  queueRenderPage(pageNum);
+}
+document.getElementById('prev').addEventListener('click', onPrevPage);
+
+/**
+ * Displays next page.
+ */
+function onNextPage() {
+  if (pageNum >= pdfDoc.numPages) {
+    return;
+  }
+  pageNum++;
+  queueRenderPage(pageNum);
+}
+document.getElementById('next').addEventListener('click', onNextPage);
+
+/**
+ * Asynchronously downloads PDF.
+ */
+//promise - load pdf based64 data 
+pdfjsLib.getDocument({data: pdfData}).then(function(pdfDoc_) {
+  pdfDoc = pdfDoc_;
+  document.getElementById('page_count').textContent = pdfDoc.numPages;
+  // Initial/first page rendering
+  renderPage(pageNum);
 });
