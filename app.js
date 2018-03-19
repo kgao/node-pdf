@@ -10,7 +10,7 @@ var flash=require("connect-flash");
 
 var api = require('./routes/api');
 var csv = require('./routes/csv');
-var cable = require('./routes/cable');
+var pdf = require('./routes/pdf');
 
 var app = express();
 
@@ -56,7 +56,7 @@ app.use('/', index);
 
 app.use('/api/v1', api);
 app.use('/api/v1/csv', csv);
-app.use('/api/v1/cable', cable);
+app.use('/api/v1/pdf', pdf);
 app.use('/api/v1/docs', swaggerUI.serve,swaggerUI.setup(swaggerDocument, showExplorer, options, customCss));
 
  

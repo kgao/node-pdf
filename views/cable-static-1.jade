@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  
+  h1 #{title}
+  p Welcome to use the #{title} reader !
+  p Server Status: #{e.status}
+  div
+    button#prev Previous
+    &nbsp; 
+    button#next Next
+    &nbsp; &nbsp;
+    span Page: 
+      span#page_num
+      / 
+      span#page_count
+
+  canvas#the-canvas
+  script.
+    if (#{e.status} == 200) {
+      console.log(!{JSON.stringify(e.status)});
+      var pdfBase64 = !{JSON.stringify(e.content)};
+    } 
+  script(src='/js/cable.js')
