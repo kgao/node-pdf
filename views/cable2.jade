@@ -3,7 +3,7 @@ extends layout
 block content
   
   h1= title
-  p Welcome to the #{title} reader!
+  p Welcome to the #{title} reader,  #{user.firstName} (#{user.username}) !
   p PDF link: #{url}
   script(src="/js/pdfobject.js")
   #example

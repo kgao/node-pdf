@@ -1,4 +1,31 @@
 extends layout
+
 block content
-  h1= title
-  p Welcome to #{title}, loged in user!
+	div.container
+		div.row
+			div.col-sm-6.col-md-4.col-md-offset-4
+				#user
+					h1.text-center.login-title Welcome #{user.firstName} - Account details:
+						div.signup-wall
+							ul.user-details
+								li 
+									p(style='float:left;') Username:
+									P(style='float:right;margin-right:10px;') #{user.username}
+								li(style='clear:left;') 
+									p(style='float:left;') Email:
+									p(style='float:right;margin-right:10px;') #{user.email}
+								li(style='clear:left;') 
+									p(style='float:left;') First Name:
+									p(style='float:right;margin-right:10px;') #{user.firstName} 
+								li(style='clear:left;') 
+									p(style='float:left;') Last Name:
+									p(style='float:right;margin-right:10px;') #{user.lastName}
+						&nbsp;	
+						p(style= error === undefined ?'display: none':'display: block') The input number is invalid!	
+						p(style= error === undefined ?'display: block':'display: none') Please input an index number to start:
+						form(class='form-signin', action='/cable', method='GET')
+							input#index(type='number', name='id', class='form-control', placeholder='1-1013', min="1" max="1013" required)
+							&nbsp;
+							button(class='btn btn-lg btn-primary btn-block', type='submit') Continue
+						
+						a(href='/signout', class='text-center new-account') Sign Out

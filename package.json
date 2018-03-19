@@ -6,7 +6,9 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.17.1",
+    "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.3",
     "csvtojson": "^1.1.9",
     "debug": "~2.6.3",
@@ -19,6 +21,7 @@
     "passport-local": "^1.0.0",
     "pdfreader": "^0.2.4",
     "serve-favicon": "~2.4.2",
+    "static-favicon": "^2.0.0-alpha",
     "swagger-ui-express": "^1.0.8"
   }
 }

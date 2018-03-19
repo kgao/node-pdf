@@ -2,10 +2,10 @@ extends layout
 
 block content
   
-  h1= title
-  p Welcome to the #{title} reader!
+  h1 #{title} ##{id}
+  p Welcome to use the #{title} reader,  #{user.firstName} (#{user.username}) !
   p Server Status: #{e.status}
-  //- p Server Content: #{e.content}
+  p PDF Link: #{cable.PDFLink}
   div
     button#prev Previous
     &nbsp; 
@@ -22,5 +22,55 @@ block content
       console.log(!{JSON.stringify(e.status)});
       var pdfBase64 = !{JSON.stringify(e.content)};
     } 
-  script(src="/js/cable.js")
+  script(src='/js/cable.js')
+
+  div.survey-wall
+      h3(style='text-align:center') Your Answer
+      form(class='form-signin', action='/cable', method='POST')
+          p(style='font-weight: bold;') 1) On a scale of 1 – 10 with 10 being the most positive, how would you pick this cable into FRUS?
+          p(style='float:left;') 1
+          input(id='rate' name='FRUS_Rate' type='range' min='1' max='10' value='5' step='1' class='slider' onchange='printValue("rate","rate_value")' style='width:50%;float:left;margin-left:10px;margin-right:10px;')
+          p(style='float:left;') 10
+          input(id='rate_value' name='FRUS_Rate_Value' type='text', size='1', disabled=true, style='width:10%;float:right;margin-right:20px;' onchange='printValue("rate_value","rate")')
+          br
+          hr(style='clear: left;')
+
+          p(style='font-weight: bold;') 2) Which features you have considered to make the decision above?
+          input(type='checkbox' name='FRUS_Features' value='Sender')
+          &nbsp;
+          span Sender
+          br
+          input(type='checkbox' name='FRUS_Features' value='Recipient')
+          &nbsp;
+          span Recipient
+          br
+          input(type='checkbox' name='FRUS_Features' value='Date')
+          &nbsp;
+          span Date
+          br
+          input(type='checkbox' name='FRUS_Features' value='Keywords')
+          &nbsp;
+          span Keywords
+          br
+          input(type='checkbox' name='FRUS_Features' value='Content')
+          &nbsp;
+          span Content
+          br
+          hr
+                          
+          p(style='font-weight: bold;') 3) Any note?
+          textarea(id='note' name='FRUS_Note' type='text', rows='4' cols='40' style='margin-right:20px;')
+
+          input(type='hidden' name='id' value='#{id}')
+          input(type='hidden' name='UserName' value='#{user.username}')
+          input(type='hidden' name='DocID' value='#{cable.DocID}')
+          input(type='hidden' name='PFRUS' value='#{cable.PFRUS}')
+          input(type='hidden' name='InFRUS' value='#{cable.InFRUS}')
+          input(type='hidden' name='SICResult' value='#{cable.SICResult}')
+          input(type='hidden' name='PDFLink' value='#{cable.PDFLink}')
+          input(type='hidden' name='Year' value='#{cable.Year}')
+
+          button(class='btn btn-lg btn-primary btn-block', type='submit', style= error === undefined ?'display: block':'display: none;') Submit
+          p(style= error === undefined ?'display: none':'display: block; color: red;') Submission failed! Please 
+            a(href='mailto:kevingao@microsoft.com?Subject=Submission%20Fail%20-%20User:#{user.username}|Id:#{id}|Doc:#{cable.DocID}') report
 

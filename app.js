@@ -5,12 +5,12 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require('passport');
+var flash=require("connect-flash");
 
-var index = require('./routes/index')(passport);
+
 var api = require('./routes/api');
-var users = require('./routes/users');
 var csv = require('./routes/csv');
-var pdf = require('./routes/pdf');
+var cable = require('./routes/cable');
 
 var app = express();
 
@@ -36,16 +36,30 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Configuring Passport
 var passport = require('passport');
 var expressSession = require('express-session');
+// TODO - Why Do we need this key ?
 app.use(expressSession({secret: 'mySecretKey'}));
 app.use(passport.initialize());
 app.use(passport.session());
 
+ // Using the flash middleware provided by connect-flash to store messages in session
+ // and displaying in templates
+var flash = require('connect-flash');
+app.use(flash());
+
+// Initialize Passport
+var initPassport = require('./passport/init');
+initPassport(passport);
+var index = require('./routes/index')(passport);
+
 app.use('/', index);
+
+
 app.use('/api/v1', api);
-app.use('/api/v1/users', users);
 app.use('/api/v1/csv', csv);
-app.use('/api/v1/pdf', pdf);
+app.use('/api/v1/cable', cable);
 app.use('/api/v1/docs', swaggerUI.serve,swaggerUI.setup(swaggerDocument, showExplorer, options, customCss));
+
+ 
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

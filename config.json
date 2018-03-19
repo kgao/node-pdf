@@ -4,7 +4,7 @@
         "password": "<password>"
     },
     "db":{
-        "mode": false,
+        "mode": true,
         "mongo":{
             "url": "<yourmongourl>"
         }
