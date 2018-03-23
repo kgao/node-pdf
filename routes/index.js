@@ -66,16 +66,21 @@ module.exports = function(passport){
     
     /* Handle App Logic */
 	router.get('/cable', isAuthenticated, function(req, res){
-		cableController.findCableByIndex(req.query.id,function(o){
-			if(o.status === 404){
-				res.render('home', {user: req.user, error: true});
-			}else{
-				pdfController.loadPDF(o.content[0].PDFLink, function(e){
-					res.render('cable1', { title: 'Cable', e: e, user: req.user, id: req.query.id, cable: o.content[0] });
-				});
-			}
-		});
+		if(req.query.id < 1 || req.query.id > 1013) { //TODO: validation layer
+			res.render('home', {user: req.user, error: true});
+		}else{
+			cableController.findCableByIndex(req.query.id,function(o){
+				if(o.status === 404){
+					res.render('home', {user: req.user, error: true});
+				}else{
+					pdfController.loadPDF(o.content[0].PDFLink, function(e){
+						res.render('cable1', { title: 'Cable', e: e, user: req.user, id: req.query.id, cable: o.content[0] });
+					});
+				}
+			});
+		}			
 	});
+
 	router.post('/cable', isAuthenticated, function(req, res){
 		console.log('Submitting Answer ... ');
         var answer = new Answer({
@@ -96,15 +101,19 @@ module.exports = function(passport){
 					res.render('cable1', { title: 'Cable', e: {status:404, content:[]}, user: req.user, id: req.body.id, cable:{}, error: true});
 		   }else{
 			   //Start next experiment automatically ->
-			   cableController.findCableByIndex( a.content.Index+1, function(o){
-					if(o.status === 404){
-						res.render('home', {user: req.user, error: true});
-					}else{
-						pdfController.loadPDF(o.content[0].PDFLink, function(e){
-							res.render('cable1', { title: 'Cable', e: e, user: req.user, id: a.content.Index+1, cable: o.content[0] });
-						});
-					}
-			  });
+				 	if(a.content.Index+1 < 1 || a.content.Index+1 > 1013) { //TODO: validation layer
+							res.render('home', {user: req.user, error: true});
+						}else{
+					  cableController.findCableByIndex( a.content.Index+1, function(o){
+						if(o.status === 404){
+							res.render('home', {user: req.user, error: true});
+						}else{
+							pdfController.loadPDF(o.content[0].PDFLink, function(e){
+								res.render('cable1', { title: 'Cable', e: e, user: req.user, id: a.content.Index+1, cable: o.content[0] });
+							});
+						}
+			  	});
+				 }
 		   }
 		});
 	});
